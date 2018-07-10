@@ -1,7 +1,7 @@
 JIRA Boardnamedisplay
 =====================
 
-This is a Userscript to show the JIRA boardname where it used to be
+This is a Userscript to make the JIRA boardname more visible where appropriate
 
 
 
@@ -22,7 +22,11 @@ Installation
 
 1. Install [GreaseMonkey] if you do not have it already
 1. Go to [the latest release]
-1. Click "JIRA_Boardnamedisplay.user.js"
+1. Do NOT click "JIRA_Boardnamedisplay.user.js",
+   Chrome would download it instead of installing
+1. Click on the tag name that is shown below "Latest release"
+1. Click on "JIRA_Boardnamedisplay.user.js"
+1. Click on "Raw"
 1. Install or update JIRA Boardnamedisplay
 
 ### Chrome

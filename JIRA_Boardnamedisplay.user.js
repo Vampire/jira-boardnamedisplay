@@ -21,22 +21,56 @@
 // @namespace   net.kautler.greasemonkey.jira
 // @description Displays the Boardname for JIRA boards
 // @match       *://*/*RapidBoard*
-// @version     1.0
+// @version     2.0
 // @grant       none
 // ==/UserScript==
 
-String.prototype.endsWith = function(suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1;
-};
-
 function displayBoardname() {
-    var boardnameElement = document.getElementById("ghx-board-name");
-    if (boardnameElement != null) {
-        var boardname = document.getElementsByClassName("scope-filter-trigger")[0].textContent + (boardnameElement.textContent.endsWith(":") ? ":" : "");
-        if (boardnameElement.textContent != boardname) {
-            boardnameElement.textContent = boardname;
-        }
+    // always make the board name visible outside the sidebar
+    var boardNameElement = document.getElementById("ghx-board-name");
+    if (boardNameElement == null) {
+        setTimeout(displayBoardname, 1000);
+        return;
+    }
+
+    boardNameElement.style.display = "block";
+
+    var subnavigatorTitleElement = document.getElementsByClassName("subnavigator-title")[0];
+    if (subnavigatorTitleElement == null) {
+        setTimeout(displayBoardname, 1000);
+        return;
+    }
+
+    var subnavigatorTitleStyle = window.getComputedStyle(subnavigatorTitleElement, null);
+    var subnavigatorTitleSize = subnavigatorTitleStyle.getPropertyValue('font-size');
+    var subnavigatorTitleSizeFloat = parseFloat(subnavigatorTitleStyle.getPropertyValue('font-size'));
+    var boardNameStyle = window.getComputedStyle(boardNameElement, null);
+    var boardNameSize = boardNameStyle.getPropertyValue('font-size');
+    var boardNameSizeFloat = parseFloat(boardNameStyle.getPropertyValue('font-size'));
+
+    // if subnavigator title has no added-value, swap sizes
+    let staticSubnavigatorTitles = [
+        "Active sprints",
+        "Aktive Sprints",
+        "Kanban board",
+        "Kanban-Board"
+    ];
+    if (((subnavigatorTitleSizeFloat > boardNameSizeFloat)
+        && staticSubnavigatorTitles.includes(subnavigatorTitleElement.textContent))
+        || ((subnavigatorTitleSizeFloat < boardNameSizeFloat)
+            && !staticSubnavigatorTitles.includes(subnavigatorTitleElement.textContent))) {
+
+        boardNameElement.style.fontSize = subnavigatorTitleSize;
+        boardNameElement.style.lineHeight = subnavigatorTitleStyle.getPropertyValue('line-height');
+        boardNameElement.style.color = subnavigatorTitleStyle.getPropertyValue('color');
+        boardNameElement.style.fontWeight = subnavigatorTitleStyle.getPropertyValue('font-weight');
+
+        subnavigatorTitleElement.style.fontSize = boardNameSize;
+        subnavigatorTitleElement.style.lineHeight = boardNameStyle.getPropertyValue('line-height');
+        subnavigatorTitleElement.style.color = boardNameStyle.getPropertyValue('color');
+        subnavigatorTitleElement.style.fontWeight = boardNameStyle.getPropertyValue('font-weight');
     }
     setTimeout(displayBoardname, 1000);
 }
+
 displayBoardname();
